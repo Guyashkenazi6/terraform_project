@@ -229,7 +229,7 @@ resource "azurerm_virtual_machine_extension" "db_ext" {
 
   settings = <<SETTINGS
  {
-  "commandToExecute": "git clone https://github.com/Milk18/terraform_project.git && sudo sh final_terraform/shell_scripts/db_script.sh"
+  "commandToExecute": "git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh shell_scripts/db_script.sh"
 }
 SETTINGS
   depends_on = [
@@ -247,7 +247,7 @@ resource "azurerm_virtual_machine_extension" "web_ext" {
 
   settings = <<SETTINGS
  {
-  "commandToExecute": "git clone https://github.com/Milk18/terraform_project.git && sudo sh final_terraform/shell_scripts/web_script.sh"
+  "commandToExecute": "git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh shell_scripts/web_script.sh"
 }
 SETTINGS
   depends_on = [
