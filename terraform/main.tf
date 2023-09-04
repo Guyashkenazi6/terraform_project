@@ -50,7 +50,7 @@ resource "azurerm_network_security_group" "nsg-web" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = 22
-    source_address_prefix      = var.source_ip_address
+    source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 }
@@ -79,7 +79,7 @@ resource "azurerm_network_security_group" "nsg-db" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = 22
-    source_address_prefix      = var.source_ip_address
+    source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 }
@@ -229,7 +229,7 @@ resource "azurerm_virtual_machine_extension" "db_ext" {
 
   settings = <<SETTINGS
  {
-  "commandToExecute": "git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh shell_scripts/db_script.sh"
+  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/db_script.sh"
 }
 SETTINGS
   depends_on = [
@@ -247,12 +247,13 @@ resource "azurerm_virtual_machine_extension" "web_ext" {
 
   settings = <<SETTINGS
  {
-  "commandToExecute": "git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh shell_scripts/web_script.sh"
+  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/web_script.sh"
 }
 SETTINGS
   depends_on = [
   azurerm_linux_virtual_machine.vm-db,
     azurerm_virtual_machine_extension.db_ext,
     azurerm_linux_virtual_machine.vm-web
-  ]
+  ] 
 }
+
