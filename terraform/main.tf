@@ -222,40 +222,38 @@ resource "azurerm_linux_virtual_machine" "vm-db" {
 
 
 resource "azurerm_managed_disk" "web-disk" {
-  name = "${azurerm_linux__virtual_machine.vm-web.name}-disk1"
-  location = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                 = "${azurerm_linux_virtual_machine.vm-web.name}-disk1"
+  location             = azurerm_resource_group.rg.location
+  resource_group_name  = azurerm_resource_group.rg.name
   storage_account_type = "Standard_LRS"
-  create_option = "Empty"
-  disk_size_gb = 1
-  
-}
-
-
-resource "azurerm_virtual_machine_data_disk_attachment" "web-attach" {
-  managed_disk_id = azurerm_managed_disk.web-disk.id
-  virtual_machine_id = azurerm_linux_virtual_machine.vm-web.id
-  lun = "10"
-  caching = "ReadWrite"
+  create_option        = "Empty"
+  disk_size_gb         = 1
 }
 
 resource "azurerm_managed_disk" "db-disk" {
-  name = "${azurerm_linux__virtual_machine.vm-db.name}-disk1"
-  location = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                 = "${azurerm_linux_virtual_machine.vm-db.name}-disk1"
+  location             = azurerm_resource_group.rg.location
+  resource_group_name  = azurerm_resource_group.rg.name
   storage_account_type = "Standard_LRS"
-  create_option = "Empty"
-  disk_size_gb = 1
-  
+  create_option        = "Empty"
+  disk_size_gb         = 1
 }
 
+resource "azurerm_virtual_machine_data_disk_attachment" "web-attach" {
+  managed_disk_id      = azurerm_managed_disk.web-disk.id
+  virtual_machine_id   = azurerm_linux_virtual_machine.vm-web.id
+  lun                  = 10
+  caching              = "ReadWrite"
+}
 
 resource "azurerm_virtual_machine_data_disk_attachment" "db-attach" {
-  managed_disk_id = azurerm_managed_disk.db-disk.id
-  virtual_machine_id = azurerm_linux_virtual_machine.vm-db.id
-  lun = "10"
-  caching = "ReadWrite"
+  managed_disk_id      = azurerm_managed_disk.db-disk.id
+  virtual_machine_id   = azurerm_linux_virtual_machine.vm-db.id
+  lun                  = 10
+  caching              = "ReadWrite"
 }
+
+
 
 #creating db extension
 resource "azurerm_virtual_machine_extension" "db_ext" {
