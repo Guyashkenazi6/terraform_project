@@ -21,4 +21,4 @@ git clone https://github.com/Guyashkenazi6/terraform_project.git
 pip install flask
 pip install psycopg2-binary
 python3 /var/lib/waagent/custom-script/download/0/terraform_project/flask_app/init_db.py
-python3 /var/lib/waagent/custom-script/download/0/terraform_project/flask_app/main.py
+python3 /var/lib/waagent/custom-script/download/0/terraform_project/flask_app/main.py &
