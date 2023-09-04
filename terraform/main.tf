@@ -257,8 +257,6 @@ resource "azurerm_virtual_machine_data_disk_attachment" "db-attach" {
   caching = "ReadWrite"
 }
 
-
-
 #creating db extension
 resource "azurerm_virtual_machine_extension" "db_ext" {
   name                 = "install_flask"
