@@ -245,19 +245,18 @@ resource "null_resource" "web_vm_null" {
     host = azurerm_linux_virtual_machine.vm-web.public_ip_address
   }
   provisioner "remote-exec" {
-    inline = [ 
-    "sudo mkfs -t ext4 /dev/sdc",
-    "sudo mkdir /data1",
-    "sudo mount /dev/sdc /data1" 
+    inline=[
+      "sudo mkfs -t ext4 /dev/sdc",
+      "sudo mkdir /data1",
+      "sudo mount /dev/sdc /data1"
     ]
-}
-
+  }
   depends_on = [
-    azurerm_virtual_machine_data_disk_attachment.db_disk_attach
+    azurerm_virtual_machine_data_disk_attachment.web_disk_attach
   ]
-    triggers = {
-      always_run = timestamp()
-    }
+  triggers = {
+    always_run = timestamp()
+  }
 }
 
 #create db vm managed disk
@@ -285,19 +284,18 @@ resource "null_resource" "db_vm_null" {
     host = azurerm_linux_virtual_machine.vm-db.public_ip_address
   }
   provisioner "remote-exec" {
-    inline = [ 
-    "sudo mkfs -t ext4 /dev/sdc",
-    "sudo mkdir /data1",
-    "sudo mount /dev/sdc /data1" 
-    ]
-}
-
+    inline= [
+      "sudo mkfs -t ext4 /dev/sdc",
+      "sudo mkdir /data1",
+      "sudo mount /dev/sdc /data1"
+      ]
+  }
   depends_on = [
     azurerm_virtual_machine_data_disk_attachment.db_disk_attach
   ]
-    triggers = {
-      always_run = timestamp()
-    }
+  triggers = {
+    always_run = timestamp()
+  }
 }
 
 
