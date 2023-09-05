@@ -1,24 +1,23 @@
 #!/bin/sh
-apt-get update
 
-#DB_PASS=$1
-cat <<EOT >> .bashrc
-APP_PORT=8080
-DB_IP='10.1.1.4'
-DB_USER="adminuser"
-DB_PASS=user123
-EOT
-export APP_PORT=8080
-export DB_IP='10.1.1.4'
-export DB_USER="adminuser"
-export DB_PASSWORD=$DB_PASS
-source .bashrc
-apt install nano
-apt install python3
-apt install python3-pip -y
-apt install git -y
+# Capture the command line arguments
+APP_PORT="$1"
+DB_IP="$2"
+DB_PASS="$3"
+DB_USER="$4"
+
+# Export the variables
+export APP_PORT
+export DB_IP
+export DB_PASS
+export DB_USER
+
+# Install necessary packages
+apt-get update
+apt install -y nano python3 python3-pip git
+pip install flask psycopg2-binary
+
+# Clone repo and run scripts
 git clone https://github.com/Guyashkenazi6/terraform_project.git
-pip install flask
-pip install psycopg2-binary
 python3 /var/lib/waagent/custom-script/download/0/terraform_project/flask_app/init_db.py
 python3 /var/lib/waagent/custom-script/download/0/terraform_project/flask_app/main.py &
