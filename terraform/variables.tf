@@ -40,3 +40,34 @@ variable "source_ip_address" {
   default = "*"
   # ""
 }
+
+
+variable "disk_mount" {
+  description = "list of commands to mounting disk to the vm"
+  type = list(string)
+  default = [
+    "sudo mkfs -t ext4 /dev/sdc",
+    "sudo mkdir /data1",
+    "sudo mount /dev/sdc /data1"
+    ]
+}
+
+variable "app_port" {
+  description = "The port on which the application runs."
+  default     = 8080
+}
+
+variable "db_ip" {
+  description = "The IP address of the database."
+  default     = "10.1.1.4"
+}
+
+variable "db_password" {
+  description = "The password for the database."
+  default     = "user123"
+}
+
+variable "db_user" {
+  description = "The user for the database."
+  default     = "adminuser"
+}

@@ -220,39 +220,69 @@ resource "azurerm_linux_virtual_machine" "vm-db" {
 }
 
 
-
+#create web vm managed disk
 resource "azurerm_managed_disk" "web-disk" {
   name                 = "${azurerm_linux_virtual_machine.vm-web.name}-disk1"
   location             = azurerm_resource_group.rg.location
   resource_group_name  = azurerm_resource_group.rg.name
   storage_account_type = "Standard_LRS"
   create_option        = "Empty"
-  disk_size_gb         = 1
+  disk_size_gb         = 10
+}
+#attach web disk to web vm
+resource "azurerm_virtual_machine_data_disk_attachment" "web_disk_attach" {
+  managed_disk_id    = azurerm_managed_disk.web-disk.id
+  virtual_machine_id = azurerm_linux_virtual_machine.vm-web.id
+  lun                = "10"
+  caching            = "ReadWrite"
+}
+#web provision to mount disk
+resource "null_resource" "web_vm_null" {
+  connection {
+    type = "ssh"
+    user = var.admin_user
+    private_key = tls_private_key.vm_ssh.private_key_pem
+    host = azurerm_linux_virtual_machine.vm-web.public_ip_address
+  }
+  provisioner "remote-exec" {
+    inline=var.disk_mount
+  }
+  depends_on = [
+    azurerm_virtual_machine_data_disk_attachment.web_disk_attach
+  ]
 }
 
+#create db vm managed disk
 resource "azurerm_managed_disk" "db-disk" {
   name                 = "${azurerm_linux_virtual_machine.vm-db.name}-disk1"
   location             = azurerm_resource_group.rg.location
   resource_group_name  = azurerm_resource_group.rg.name
   storage_account_type = "Standard_LRS"
   create_option        = "Empty"
-  disk_size_gb         = 1
+  disk_size_gb         = 10
 }
-
-resource "azurerm_virtual_machine_data_disk_attachment" "web-attach" {
-  managed_disk_id      = azurerm_managed_disk.web-disk.id
-  virtual_machine_id   = azurerm_linux_virtual_machine.vm-web.id
-  lun                  = 10
-  caching              = "ReadWrite"
+#attach db disk to web vm
+resource "azurerm_virtual_machine_data_disk_attachment" "db_disk_attach" {
+  managed_disk_id    = azurerm_managed_disk.db-disk.id
+  virtual_machine_id = azurerm_linux_virtual_machine.vm-db.id
+  lun                = "10"
+  caching            = "ReadWrite"
 }
-
-resource "azurerm_virtual_machine_data_disk_attachment" "db-attach" {
-  managed_disk_id      = azurerm_managed_disk.db-disk.id
-  virtual_machine_id   = azurerm_linux_virtual_machine.vm-db.id
-  lun                  = 10
-  caching              = "ReadWrite"
+#db provision to mount disk
+resource "null_resource" "db_vm_null" {
+  connection {
+    type = "ssh"
+    user = var.admin_user
+    private_key = tls_private_key.vm_ssh.private_key_pem
+    host = azurerm_linux_virtual_machine.vm-db.public_ip_address
+  }
+  provisioner "remote-exec" {
+    inline= var.disk_mount
+  }
+  depends_on = [
+    azurerm_virtual_machine_data_disk_attachment.db_disk_attach
+  ]
 }
-
 
 
 #creating db extension
@@ -264,10 +294,11 @@ resource "azurerm_virtual_machine_extension" "db_ext" {
   type_handler_version = "2.1"
 
   settings = <<SETTINGS
- {
-  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/db_script.sh"
+{
+  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/db_script.sh '${var.db_ip}' '${var.app_port}' '${var.db_password}' '${var.db_user}'"
 }
 SETTINGS
+
   depends_on = [
   azurerm_linux_virtual_machine.vm-db
   ]
@@ -282,10 +313,11 @@ resource "azurerm_virtual_machine_extension" "web_ext" {
   type_handler_version = "2.1"
 
   settings = <<SETTINGS
- {
-  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/web_script.sh"
+{
+  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/web_script.sh '${var.db_ip}' '${var.app_port}' '${var.db_password}' '${var.db_user}'"
 }
 SETTINGS
+
   depends_on = [
   azurerm_linux_virtual_machine.vm-db,
     azurerm_virtual_machine_extension.db_ext,
