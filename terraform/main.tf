@@ -295,7 +295,7 @@ resource "azurerm_virtual_machine_extension" "db_ext" {
 
   settings = <<SETTINGS
 {
-  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/db_script.sh '${var.app_port}' '${var.db_ip}' '${var.db_user}' '${var.db_password}' "
+  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo bash /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/db_script.bash '${var.app_port}' '${var.db_ip}' '${var.db_user}' '${var.db_password}' "
 }
 SETTINGS
 
@@ -314,7 +314,7 @@ resource "azurerm_virtual_machine_extension" "web_ext" {
 
   settings = <<SETTINGS
 {
-  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/web_script.sh '${var.app_port}' '${var.db_ip}' '${var.db_user}' '${var.db_password}'"
+  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo bash /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/web_script.bash '${var.app_port}' '${var.db_ip}' '${var.db_user}' '${var.db_password}'"
 }
 SETTINGS
 
