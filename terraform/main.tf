@@ -32,13 +32,13 @@ resource "azurerm_network_security_group" "nsg-web" {
   name                = "nsg-terraform-prod-web"
   resource_group_name = azurerm_resource_group.rg.name
   security_rule {
-    name                       = "opentowebonport${var.web_app_port}"
+    name                       = "opentowebonport${var.app_port}"
     priority                   = 110
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "*"
     source_port_range          = "*"
-    destination_port_range     = var.web_app_port
+    destination_port_range     = var.app_port
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -295,7 +295,7 @@ resource "azurerm_virtual_machine_extension" "db_ext" {
 
   settings = <<SETTINGS
 {
-  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/db_script.sh '${var.db_ip}' '${var.app_port}' '${var.db_password}' '${var.db_user}'"
+  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/db_script.sh '${var.app_port}' '${var.db_ip}' '${var.db_user}' '${var.db_password}' "
 }
 SETTINGS
 
@@ -314,7 +314,7 @@ resource "azurerm_virtual_machine_extension" "web_ext" {
 
   settings = <<SETTINGS
 {
-  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/web_script.sh '${var.db_ip}' '${var.app_port}' '${var.db_password}' '${var.db_user}'"
+  "commandToExecute": "sudo apt-get update && sudo apt install git -y && git clone https://github.com/Guyashkenazi6/terraform_project.git && sudo sh /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/web_script.sh '${var.app_port}' '${var.db_ip}' '${var.db_user}' '${var.db_password}'"
 }
 SETTINGS
 
