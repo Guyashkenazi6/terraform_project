@@ -1,21 +1,13 @@
 #!/bin/sh
 
-# Capture the command line arguments
-APP_PORT="$1"
-DB_IP="$2"
-DB_PASS="$3"
-DB_USER="$4"
-
-# Export the variables
-export APP_PORT
-export DB_IP
-export DB_PASS
-export DB_USER
-
 # Install necessary packages
 apt-get update
-apt install -y nano python3 python3-pip git
-pip install flask psycopg2-binary
+apt install nano
+apt install python3
+apt install python3-pip -y
+pip install flask
+pip install psycopg2-binary
+source /var/lib/waagent/custom-script/download/0/terraform_project/shell_scripts/export_script.bash "$1" "$2" "$3" "$4"
 
 # Clone repo and run scripts
 git clone https://github.com/Guyashkenazi6/terraform_project.git
