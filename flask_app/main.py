@@ -3,13 +3,14 @@
 from flask import Flask, render_template, request, redirect, url_for
 import psycopg2
 import os
-open_port = os.environ.get("APP_PORT", 8080)
-# open_port = 8080
 
+
+
+open_port = os.environ["APP_PORT"]
 app = Flask(__name__)
-db_host = os.environ.get("DB_IP", '10.1.1.4')
-db_pass = os.environ("DB_PASS", "user123")
-
+db_host = os.environ["DB_IP"]
+db_pass = os.environ["DB_PASS"]
+# open_port = 8080
 # db_host = '10.1.1.4'
 # db_pass = "user123"
 
