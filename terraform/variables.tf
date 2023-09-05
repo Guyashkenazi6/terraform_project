@@ -7,16 +7,6 @@ variable "location" {
   type = string
   default= "westeurope"
 }
-variable "db_password" {
-  description = "db password"
-  type = string
-}
-
-variable "web_app_port" {
-  description = "open to web app exported port"
-  type = number
-  default = 8080
-}
 
 variable "admin_user" {
   description = "vm's username"
