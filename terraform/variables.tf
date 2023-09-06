@@ -49,3 +49,8 @@ variable "db_user" {
   description = "The user for the database."
   default     = "adminuser"
 }
+
+variable "web_subnet" {
+  type = string
+  default = "10.1.0.0/24"
+}
