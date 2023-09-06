@@ -1,17 +1,16 @@
 variable "resource_group_name" {
+  description = "resource_group_name"
   type = string
-  default = "rg-terraform-prod-westeu"
 }
 
 variable "location" {
+  description = "vm's location"
   type = string
-  default= "westeurope"
 }
 
 variable "admin_user" {
   description = "vm's username"
   type = string
-#  default = "adminuser"
 }
 
 variable "admin_password" {
@@ -21,7 +20,6 @@ variable "admin_password" {
   validation {
     condition     = length(var.admin_password)>6
     error_message = "password too short"
-    #  default = "user123"
   }
 }
 
@@ -32,25 +30,35 @@ variable "source_ip_address" {
 
 variable "app_port" {
   description = "The port on which the application runs."
-  default     = 8080
+  type = number
 }
 
 variable "db_ip" {
   description = "The IP address of the database."
-  default     = "10.1.1.4"
+  type = string
 }
 
 variable "db_password" {
   description = "The password for the database."
-  default     = "user123"
+  type = string
 }
 
 variable "db_user" {
   description = "The user for the database."
-  default     = "adminuser"
+  type = string
 }
 
 variable "web_subnet" {
+  description = "The subnet for the web vm."
   type = string
-  default = "10.1.0.0/24"
+}
+
+variable "git_repo" {
+  description = "git repo that is used by the extension"
+  type = string
+}
+
+variable "extension_git_path" {
+  description = "vm path to activate bash scripts"
+  type = string
 }
